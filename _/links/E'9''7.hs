@@ -1,0 +1,189 @@
+--
+--
+--
+----------------
+-- Exercise 9.7.
+----------------
+--
+--
+--
+module E'9''7 where
+
+
+
+-- Notes: 
+--
+--  - Use/See templates for structural induction.
+--  - Re/-member/-think/-view the definitions of "sum", "reverse" and "length".
+--    You might use properties you've already proven.
+
+
+
+
+-- ------------
+-- Proposition:
+-- ------------
+--
+--   sum ( reverse as ) = sum as
+--
+--
+-- Proof By Structural Induction:
+-- ------------------------------
+--
+--
+--   Induction Beginning (I.B.):
+--   ---------------------------
+--
+--
+--     (Base case 1.)  :<=>  as := []
+--     
+--       =>  (left) := sum ( reverse as )
+--                                          | (Base case 1.)
+--                   = sum ( reverse [] )
+--                                          | reverse
+--                   = sum []
+--                                          | sum
+--                   = 0
+--
+--
+--          (right) := sum as
+--                                          | (Base case 1.)
+--                   = sum []
+--                                          | sum
+--                   = 0
+--
+--
+--       => (left) = (right)
+--
+--       ✔
+--
+--
+--  Induction Hypothesis (I.H.):
+--  ----------------------------
+--
+--    For an arbitrary, but fixed list "as", the statement ...
+--
+--      sum ( reverse as ) = sum as
+--
+--    ... holds.
+--
+--
+--  Induction Step (I.S.):
+--  ----------------------
+--
+--
+--     (left) := sum ( reverse ( a : as ) ) 
+--                                              | reverse
+--             = sum ( reverse as ++ [a] )
+--                                              | (Proof from exercise 9.5.)
+--             = sum ( reverse as ) + sum [a]
+--                                              | (I.H.)
+--             = sum as + sum [a]
+--             = sum as + sum (a : [])
+--                                              | sum
+--             = sum as + a + sum []
+--                                              | sum
+--             = sum as + a + 0
+--                                              | (Neutral element of +.)
+--             = sum as + a
+--                                              | (Commutativity of +.)
+--             = a + sum as
+--
+--
+--    (right) := sum ( a : as )
+--                                              | sum
+--             = a + sum as
+--
+--
+--    =>  (left) = (right)
+--
+--    ■
+
+
+
+-- ------------
+-- Proposition:
+-- ------------
+--
+--   length ( reverse as ) = length as
+--
+--
+-- Proof By Structural Induction:
+-- ------------------------------
+--
+--
+--   Induction Beginning (I.B.):
+--   ---------------------------
+--
+--
+--     (Base case 1.)  :<=>  as := []
+--     
+--       =>  (left) := length ( reverse as )
+--                                                 | (Base case 1.)
+--                   = length ( reverse [] )
+--                                                 | reverse
+--                   = length []
+--                                                 | length
+--                   = 0
+--
+--
+--          (right) := length as
+--                                                 | (Base case 1.)
+--                   = length []
+--                                                 | length
+--                   = 0
+--
+--
+--       => (left) = (right)
+--
+--       ✔
+--
+--
+--  Induction Hypothesis (I.H.):
+--  ----------------------------
+--
+--    For an arbitrary, but fixed list "as", the statement ...
+--
+--      length ( reverse as ) = length as
+--
+--    ... holds.
+--
+--
+--  Induction Step (I.S.):
+--  ----------------------
+--
+--
+--     (left) := length ( reverse ( a : as ) )
+--                                                    | reverse
+--             = length ( reverse as ++ [a] )
+--                                                    | (Example 9.6.1 from the book, see *[2] below.)
+--             = length ( reverse as ) + length [a]
+--                                                    | (I.H.)
+--             = length as + length [a]
+--             = length as + length (a : [])
+--                                                    | length
+--             = length as + a + length []
+--                                                    | length
+--             = length as + a + 0
+--                                                    | (Neutral element of +.)
+--             = length as + a
+--                                                    | (Commutativity of +.)
+--             = a + length as
+--
+--
+--    (right) := length ( a : as )
+--                                   | length
+--             = a + length as
+--
+--
+--    =>  (left) = (right)
+--
+--    ■
+
+
+-- Note: *[2] length ( list_1 ++ list_2 ) = length list_1 + length list_2
+--       Both proofs are very similar in their strategies and 'function-types'.
+
+
+
+

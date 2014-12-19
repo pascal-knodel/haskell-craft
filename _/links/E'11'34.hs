@@ -1,0 +1,129 @@
+--
+--
+--
+------------------
+-- Exercise 11.34.
+------------------
+--
+--
+--
+module E'11'34 where
+
+
+
+-- ---------------
+-- 1. Proposition:
+-- ---------------
+--
+--   concat ( map (map f) xs )  =  map f (concat xs)
+--
+--
+-- Proof By Structural Induction:
+-- ------------------------------
+--
+--
+--   1. Induction Beginning (1. I.B.):
+--   ---------------------------------
+--
+--
+--     (Base case 1.)  :<=>  xs := []
+--     
+--       =>  (left) := concat ( map (map f) xs )
+--                                                   | (Base case 1.)
+--                   = concat ( map (map f) [] )
+--                                                   | []
+--                   = concat []
+--                                                   | concat
+--                   = foldr (++) [] []
+--                                                   | foldr
+--                   = []
+--
+--
+--          (right) := map f (concat xs)
+--                                                 | (Base case 1.)
+--                   = map f (concat [])
+--                                                 | concat
+--                   = map f (foldr (++) [] [])
+--                                                 | foldr
+--                   = map f []
+--                                                 | map
+--                   = []
+--
+--
+--       => (left) = (right)
+--
+--       ✔
+--
+--
+--  1. Induction Hypothesis (1. I.H.):
+--  ----------------------------------
+--
+--    For an arbitrary, but fixed list "xs" and function "f", the statement ...
+--
+--      concat ( map (map f) xs )  =  map f (concat xs)
+--
+--    ... holds.
+--
+--
+--  1. Induction Step (1. I.S.):
+--  ----------------------------
+--
+--
+--     (left) := concat ( map (map f) (x : xs) )
+--
+--
+--    (right) := map f ( concat (x : xs) )
+--                                                                          | concat
+--             = map f ( foldr (++) [] (x : xs) )
+--                                                                          | foldr
+--             = map f ( x ++ foldr (++) [] xs )
+--                                                                          | concat
+--             = map f ( x ++ concat xs )
+--                                                                          | Property of map.
+--             = map f x ++ map f (concat xs)
+--                                                                          | (1. I.H.)
+--             = map f x ++ concat ( map (map f) xs )
+--                                                                          | concat
+--             = map f x ++ foldr (++) [] ( map (map f) xs )
+--
+--             = (map f) x ++ foldr (++) [] ( map (map f) xs )
+--                                                                          | foldr
+--             = foldr (++) [] ( map (map f) (x : xs) )
+--                                                                          | concat
+--             = concat ( map (map f) (x : xs) )
+--
+--
+--    =>  (left) = (right)
+--
+--
+--    ■  (1. Proof)
+
+
+
+
+-- Example: 'lost'
+--
+--
+--     (left) := concat ( map (map f) (x : xs) )
+--                                                                                           | map
+--             = concat ( map f x : map (map f) xs )
+--                                                                                           | []
+--             = concat (  map f x : ( [] ++ map (map f) xs )  )
+--                                                                                           | ++
+--             = concat (  (map f x : []) ++ ( map (map f) xs )  )
+--                                                                                           | :
+--             = concat (  (map f x) ++ ( map (map f) xs )  )
+--                                                                                           | Property of concat from ex. 11.33
+--             = concat (map f x) ++ concat ( map (map f) xs )
+--                                                                                           | concat
+--             = foldr (++) [] (map f x) ++ foldr (++) [] ( map (map f) xs )
+--                                                                                           | Property of folder from ex. 11.32
+--             = (++) ( foldr (++) [] (map f x) ) (  foldr (++) [] ( map (map f) xs )  )
+--                                                                                           | (++)
+--             = ( foldr (++) [] (map f x) ) ++ (  foldr (++) [] ( map (map f) xs )  )
+--                                                                                           | ...
+--             = ...
+
+
+
+

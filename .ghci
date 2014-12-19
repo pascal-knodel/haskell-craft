@@ -1,0 +1,1 @@
+:!ghci -ignore-dot-ghci -i"_/links" Craft3e

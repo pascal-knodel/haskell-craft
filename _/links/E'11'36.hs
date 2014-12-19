@@ -1,0 +1,136 @@
+--
+--
+--
+------------------
+-- Exercise 11.36.
+------------------
+--
+--
+--
+module E'11'36 where
+
+
+
+-- ---------------
+-- 1. Proposition:
+-- ---------------
+--
+--   filter p (filter q xs)  =  filter (p &&& q) xs
+--
+--
+-- Proof By Structural Induction:
+-- ------------------------------
+--
+--
+--   1. Induction Beginning (1. I.B.):
+--   ---------------------------------
+--
+--
+--     (Base case 1.)  :<=>  xs := []
+--     
+--       =>  (left) := filter p (filter q xs)
+--                                                 | (Base case 1.)
+--                   = filter p (filter q [])
+--                                                 | filter
+--                   = filter p []
+--                                                 | filter
+--                   = []
+--
+--
+--          (right) := filter (p &&& q) xs
+--                                                 | (Base case 1.)
+--                   = filter (p &&& q) []
+--                                                 | filter
+--                   = []
+--
+--
+--       => (left) = (right)
+--
+--       ✔
+--
+--
+--  1. Induction Hypothesis (1. I.H.):
+--  ----------------------------------
+--
+--    For an arbitrary, but fixed list "xs", the statement ...
+--
+--      filter p (filter q xs)  =  filter (p &&& q) xs
+--
+--    ... holds.
+--
+--
+--  1. Induction Step (1. I.S.):
+--  ----------------------------
+--
+--
+--     (left) := filter p ( filter q (x : xs) )
+--
+--
+--             Case 1:  q x = True
+--             ...................
+--
+--             (left) = filter p ( x : filter q xs )
+--
+--
+--             Subcase 1.1:  p x = True
+--             ........................
+--
+--             (left) = x : filter p (filter q xs)
+--                                                   | (1. I.H.)
+--                    = x : filter (p &&& q) xs
+--
+--                
+--             Subcase 1.2:  p x = False
+--             .........................
+--
+--             (left) = filter p (filter q xs)
+--                                               | (1. I.H.)
+--                    = filter (p &&& q) xs
+--
+--
+--             Case 2:  q x = False
+--             ....................
+--
+--             (left) = filter p ( filter q xs )
+--                                                 | (1. I.H.)
+--                    = filter (p &&& q) xs
+--
+--
+--    (right) := filter (p &&& q) (x : xs)
+--
+--
+--             Case 1:  (p &&& q) x = True
+--             ...........................
+--
+--                      (p &&& q) x = True
+--                                           | &&&
+--                  <=>  p x = q x = True
+--
+--                  <=>  (Subcase 1.1)
+--              
+--
+--             (right) = x : filter (p &&& q) xs
+--
+--
+--             Case 2:  (p &&& q) x = False
+--             ............................
+--     
+--
+--                      (p &&& q) x = False
+--
+--                  <=>  p x = q x = False  or  p x = False , q x = True  or  p x = True , q x = False
+--
+--                  <=>  (Subcase 1.2) , (Case 2)
+--
+--
+--             (right) = filter (p &&& q) xs
+--             
+--
+--    =>  (left) = (right)  in each case
+--
+--
+--    ■  (1. Proof)
+
+
+
+

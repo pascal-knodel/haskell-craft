@@ -1,0 +1,6 @@
+Exercises
+=========
+
+Other exercises.
+
+

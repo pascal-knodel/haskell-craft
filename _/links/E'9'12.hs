@@ -1,0 +1,656 @@
+--
+--
+--
+-----------------
+-- Exercise 9.12.
+-----------------
+--
+--
+--
+module E'9'12 where
+
+
+
+-- Note: Use/See templates for structural induction.
+
+
+
+
+-- Subchapter 9.7 (relevant definitions of it):
+
+
+shunt :: [a] -> [a] -> [a]
+shunt [] ys = ys
+shunt ( x : xs ) ys = shunt xs ( x : ys )
+
+
+rev :: [a] -> [a]
+rev xs = shunt xs []
+
+
+-- ...
+
+
+
+-- First attempt:
+
+
+-- ------------
+-- Proposition:
+-- ------------
+--
+--             rev ( xs ++ ys ) = rev ys ++ rev xs
+--                                                             | rev
+--   <=>  shunt ( xs ++ ys ) [] = shunt ys [] ++ shunt xs []
+--
+--
+-- Proof By Structural Induction:
+-- ------------------------------
+--
+--
+--   Induction Beginning (I.B.):
+--   ---------------------------
+--
+--
+--     (Base case 1.)  :<=>  xs := []
+--     
+--       =>  (left) := rev ( xs ++ ys )
+--                                                  | rev
+--                   = shunt ( xs ++ ys ) []
+--                                                  | (Base case 1.)
+--                   = shunt ( [] ++ ys ) []
+--                                                  | ++
+--                   = shunt ys []
+--
+--
+--          (right) := rev ys ++ rev xs
+--                                                  | rev
+--                   = shunt ys [] ++ shunt xs []
+--                                                  | (Base case 1.)
+--                   = shunt ys [] ++ shunt [] []
+--                                                  | shunt
+--                   = shunt ys [] ++ []
+--                                                  | (Proof from exercise 9.6.)
+--                   = shunt ys []
+--
+--
+--       => (left) = (right)
+--
+--       ✔
+--
+--
+--  Induction Hypothesis (I.H.):
+--  ----------------------------
+--
+--    For an arbitrary, but fixed list "xs", the statement ...
+--
+--                rev ( xs ++ ys ) = rev ys ++ rev xs
+--      <=>  shunt ( xs ++ ys ) [] = shunt ys [] ++ shunt xs []
+--
+--    ... holds.
+--
+--
+--  Induction Step (I.S.):
+--  ----------------------
+--
+--
+--     (left) := rev ( ( x : xs ) ++ ys )
+--                                               | rev
+--             = shunt ( ( x : xs ) ++ ys ) []
+--                                               | ++
+--             = shunt ( x : ( xs ++ ys ) )
+--                                               | shunt
+--             = shunt ( xs ++ ys ) [x]
+--                                               | ...?
+--             = ...?
+--
+--
+--    (right) := rev ys ++ rev ( x : xs )
+--                                                    | rev
+--             = shunt ys [] ++ shunt ( x : xs ) []
+--                                                    | shunt
+--             = shunt ys [] ++ shunt xs [x]
+--                                                    | ...?
+--             = ...?
+
+
+-- Note:  "shunt ... [x]" is a problem.
+
+
+
+-- Second attempt:
+
+
+-- ------------
+-- Proposition:
+-- ------------
+--
+--                  rev ( xs ++ ys ) = rev ys ++ rev xs
+--                                                                  | rev
+--    <=>         shunt ( xs ++ ys ) = shunt ys [] ++ shunt xs []
+--                                                                  |  Thought:
+--                                                                  |  First reversing "xs", then appending the reverse 
+--                                                                  |  of "ys" should be equal to "shunt ( xs ++ ys )".
+--   '<=>'  shunt ys ( shunt xs [] ) = shunt ys [] ++ shunt xs []
+--
+--
+-- Proof By Structural Induction:
+-- ------------------------------
+--
+--
+--   Induction Beginning (I.B.):
+--   ---------------------------
+--
+--
+--     (Base case 1.)  :<=>  xs := []
+--     
+--       =>  (left) := shunt ys ( shunt xs [] )
+--                                                  | (Base case 1.)
+--                   = shunt ys ( shunt [] [] )
+--                                                  | shunt
+--                   = shunt ys []
+--
+--
+--          (right) := rev ys ++ rev xs
+--                                                  | rev
+--                   = shunt ys [] ++ shunt xs []
+--                                                  | (Base case 1.)
+--                   = shunt ys [] ++ shunt [] []
+--                                                  | shunt
+--                   = shunt ys [] ++ []
+--                                                  | (Proof from exercise 9.6.)
+--                   = shunt ys []
+--
+--
+--       => (left) = (right)
+--
+--       ✔
+--
+--
+--  Induction Hypothesis (I.H.):
+--  ----------------------------
+--
+--    For an arbitrary, but fixed list "xs", the statement ...
+--
+--      shunt ys ( shunt xs [] ) = shunt ys [] ++ shunt xs []
+--
+--    ... holds.
+--
+--
+--  Induction Step (I.S.):
+--  ----------------------
+--
+--
+--     (left) := shunt ys ( shunt ( x : xs ) [] )
+--                                                  | shunt
+--             = shunt ys ( shunt xs [x] )
+--                                                  | ...?
+--             = ...?
+--
+--
+--    (right) := rev ys ++ rev ( x : xs )
+--                                                  | rev
+--             = shunt ys [] ++ shunt ( x : xs )
+--                                                  | shunt
+--             = shunt ys [] ++ shunt xs [x]
+--                                                  | ...?
+--             = ...?
+
+
+-- Note:  "shunt ... [x]" is still a problem.
+
+
+
+-- Third attempt:
+
+
+-- -----------------
+-- Main Proposition:
+-- -----------------
+--
+--                  rev ( xs ++ ys ) = rev ys ++ rev xs
+--                                                                        | rev
+--    <=>      shunt ( xs ++ ys ) [] = shunt ys [] ++ shunt xs []
+--                                                                        | shunt
+--   '<=>'  shunt ys ( shunt xs [] ) = shunt ys [] ++ shunt xs []
+--                                                                        | (Generalisation.)
+--   '<=>'  shunt ys ( shunt xs zs ) = shunt ys [] ++ shunt xs [] ++ zs
+--
+--
+--   Note: '<=>' are 'thoughts' or potential propositions. 'No proposition is proven until it is proven'.
+--         The trick is to search for a general proposition with that help the specialized proposition becomes provable.
+--
+--
+-- Proof By Structural Induction:
+-- ------------------------------
+--
+--
+--   Main Induction Beginning (M.I.B.):
+--   ----------------------------------
+--
+--
+--     (Base case 1.)  :<=>  xs := []
+--     
+--       =>  (left) := shunt ys ( shunt xs zs )
+--                                                | (Base case 1.)
+--                   = shunt ys ( shunt [] zs )
+--                                                | shunt
+--                   = shunt ys zs
+--
+--
+--          (right) := shunt ys [] ++ shunt xs [] ++ zs
+--                                                        | (Base case 1.)
+--                   = shunt ys [] ++ shunt [] [] ++ zs
+--                                                        | shunt
+--                   = shunt ys [] ++ [] ++ zs
+--                                                        | ++
+--                   = shunt ys [] ++ zs
+--                                                        | (Property of shunt.)
+--                                                        | (Observation.)
+--                                                        | (See below for a proof.)
+--                   = shunt ys zs
+--
+--
+--       => (left) = (right)
+--
+--       ✔
+--
+--
+--  Main Induction Hypothesis (M.I.H.):
+--  -----------------------------------
+--
+--    For an arbitrary, but fixed list "xs", the statement ...
+--
+--      shunt ys ( shunt xs zs ) = shunt ys [] ++ shunt xs [] ++ zs
+--
+--    ... holds.
+--
+--
+--  Main Induction Step (M.I.S.):
+--  -----------------------------
+--
+--
+--     (left) := shunt ys ( shunt ( x : xs ) zs )
+--                                                              | shunt
+--             = shunt ys ( shunt xs ( x : zs ) )
+--                                                              | (M.I.H.)
+--             = shunt ys [] ++ shunt xs [] ++ ( x : zs )
+--
+--
+--    (right) := shunt ys [] ++ shunt ( x : xs ) [] ++ zs
+--                                                              | shunt
+--             = shunt ys [] ++ shunt xs [x] ++ zs
+--                                                              | (Associativity of ++.)
+--             = shunt ys [] ++ ( shunt xs [x] ++ zs )
+--                                                              | (Property of shunt.)
+--                                                              | (Observation.)
+--                                                              | (See below for a proof.)
+--             = shunt ys [] ++ ( shunt xs [] ++ ( x : zs ) )
+--
+--
+--    =>  (left) = (right)
+--
+--    ■ (Generalised property.)
+--
+--
+--    =>    shunt ys [] ++ shunt xs [] ++ zs
+--                                             | zs := []
+--        = shunt ys [] ++ shunt xs [] ++ []
+--                                             | ++
+--        = shunt ys [] ++ shunt xs []
+--                                             | rev
+--        = rev ys ++ rev xs
+--
+--
+--          shunt ys ( shunt xs [] )
+--                                     | zs = []
+--        = shunt ys ( shunt xs [] )
+--                                     | (Property of shunt.)
+--                                     | (Observation.)
+--                                     | (See below for a proof.)
+--        = shunt ( xs ++ ys ) []
+--                                     | rev
+--        = rev ( xs ++ ys )
+--
+--
+--      ■  (Specialised property.)
+
+
+
+-- Proof for  "shunt xs [] ++ ys = shunt xs ys":
+--
+--
+-- ---------------
+-- 1. Proposition:
+-- ---------------
+--
+--   shunt xs [] ++ ys = shunt xs ys
+--
+--
+-- Proof By Structural Induction:
+-- ------------------------------
+--
+--
+--   1. Induction Beginning (1. I.B.):
+--   ---------------------------------
+--
+--
+--     (Base case 1.)  :<=>  xs := []
+--     
+--       =>  (left) := shunt xs [] ++ ys
+--                                          | (Base case 1.)
+--                   = shunt [] [] ++ ys
+--                                          | shunt
+--                   = [] ++ ys
+--                                          | ++
+--                   = ys
+--
+--
+--          (right) := shunt xs ys
+--                                          | (Base case 1.)
+--                   = shunt [] ys
+--                                          | shunt
+--                   = ys
+--
+--
+--       => (left) = (right)
+--
+--       ✔
+--
+--
+--  1. Induction Hypothesis (1. I.H.):
+--  ----------------------------------
+--
+--    For an arbitrary, but fixed list "xs", the statement ...
+--
+--      shunt xs [] ++ ys = shunt xs ys
+--
+--    ... holds.
+--
+--
+--  Induction Step (I.S.):
+--  ----------------------
+--
+--
+--     (left) := shunt ( x : xs ) [] ++ ys
+--                                           | shunt
+--             = shunt xs [x] ++ ys
+--                                           | ...?
+--             = ...?
+--
+--
+--    (right) := shunt ( x : xs ) ys
+--                                           | shunt
+--             = shunt xs ( x : ys )
+--                                           | (1. I.H.)
+--             = shunt xs [] ++ ( x : ys )
+--                                           | ...?
+--             = ...?
+--
+--
+-- ---------------
+-- 2. Proposition:
+-- ---------------
+--
+--   shunt xs zs ++ ys = shunt xs ( zs ++ ys )
+--
+--
+-- Proof By Structural Induction:
+-- ------------------------------
+--
+--
+--   1. Induction Beginning (1. I.B.):
+--   ---------------------------------
+--
+--
+--     (Base case 1.)  :<=>  xs := []
+--     
+--       =>  (left) := shunt xs zs ++ ys
+--                                             | (Base case 1.)
+--                   = shunt [] zs ++ ys
+--                                             | shunt
+--                   = zs ++ ys
+--
+--
+--          (right) := shunt xs ( zs ++ ys )
+--                                             | (Base case 1.)
+--                   = shunt [] ( zs ++ ys )
+--                                             | shunt
+--                   = zs ++ ys
+--
+--
+--       => (left) = (right)
+--
+--       ✔
+--
+--
+--  2. Induction Hypothesis (2. I.H.):
+--  ----------------------------------
+--
+--    For an arbitrary, but fixed list "xs", the statement ...
+--
+--      shunt xs zs ++ ys = shunt xs ( zs ++ ys )
+--
+--    ... holds.
+--
+--
+--  2. Induction Step (2. I.S.):
+--  ----------------------------
+--
+--
+--     (left) := shunt ( x : xs ) zs ++ ys
+--                                               | shunt
+--             = shunt xs ( x : zs ) ++ ys
+--                                               | (2. I.H.)
+--             = shunt xs ( ( x : zs ) ++ ys )
+--                                               | ++
+--             = shunt xs ( x : ( zs ++ ys ) )
+--
+--
+--    (right) := shunt ( x : xs ) ( zs ++ ys )
+--                                               | shunt
+--             = shunt xs ( x : ( zs ++ ys ) )
+--
+--
+--    =>  (left) = (right)
+--
+--    ■  (2. Proposition)
+--
+--
+--
+-- Test, choosing "zs" for ...
+--
+--
+--   (1.) shunt xs [] ++ ys = shunt xs zs ++ ys
+--
+--   ... and ...
+--
+--   (2.) shunt xs ys = shunt xs ( zs ++ ys )
+--
+--   ... to hold:
+--
+--
+--  (1.)
+--
+--    shunt xs zs ++ ys
+--                              | zs := []
+--    = shunt xs [] ++ ys
+--
+--  (2.)
+--
+--    shunt xs ( zs ++ ys )
+--                              | zs = []
+--    = shunt xs ( [] ++ ys )
+--                              | ++
+--    = shunt xs ys
+--
+--  ✔
+
+
+
+-- Proof for  "shunt ys ( shunt xs [] ) = shunt ( xs ++ ys ) []":
+--
+--
+-- ---------------
+-- 1. Proposition:
+-- ---------------
+--
+--   shunt ys ( shunt xs [] ) = shunt ( xs ++ ys ) []
+--
+--
+-- Proof By Structural Induction:
+-- ------------------------------
+--
+--
+--   1. Induction Beginning (1. I.B.):
+--   ---------------------------------
+--
+--
+--     (Base case 1.)  :<=>  xs := []
+--     
+--       =>  (left) := shunt ys ( shunt xs [] )
+--                                                 | (Base case 1.)
+--                   = shunt ys ( shunt [] [] )
+--                                                 | shunt
+--                   = shunt ys []
+--
+--
+--          (right) := shunt ( xs ++ ys ) []
+--                                                 | (Base case 1.)
+--                   = shunt ( [] ++ ys ) []
+--                                                 | ++
+--                   = shunt ys []
+--
+--
+--       => (left) = (right)
+--
+--       ✔
+--
+--
+--  1. Induction Hypothesis (1. I.H.):
+--  ----------------------------------
+--
+--    For an arbitrary, but fixed list "xs", the statement ...
+--
+--      shunt ys ( shunt xs [] ) = shunt ( xs ++ ys ) []
+--
+--    ... holds.
+--
+--
+--  1. Induction Step (1. I.S.):
+--  ----------------------------
+--
+--
+--     (left) := shunt ys ( shunt ( x : xs ) [] )
+--                                                  | shunt
+--             = shunt ys ( shunt xs [x] )
+--                                                  | ...?
+--             = ...?
+--
+--
+--    (right) := shunt ( ( x : xs ) ++ ys ) []
+--                                                  | ++
+--             = shunt ( x : ( xs ++ ys ) ) []
+--                                                  | shunt
+--             = shunt ( xs ++ ys ) [x]
+--                                                  | ...?
+--             = ...?
+--
+--
+-- ---------------
+-- 2. Proposition:
+-- ---------------
+--
+--   shunt ys ( shunt xs zs ) = shunt ( xs ++ ys ) zs
+--
+--
+--   2. Induction Beginning (2. I.B.):
+--   ---------------------------------
+--
+--
+--     (Base case 1.)  :<=>  xs := []
+--     
+--       =>  (left) := shunt ys ( shunt xs zs )
+--                                                 | (Base case 1.)
+--                   = shunt ys ( shunt [] zs )
+--                                                 | shunt
+--                   = shunt ys zs
+--
+--
+--          (right) := shunt ( xs ++ ys ) zs
+--                                                 | (Base case 1.)
+--                   = shunt ( [] ++ ys ) zs
+--                                                 | ++
+--                   = shunt ys zs
+--
+--
+--       => (left) = (right)
+--
+--       ✔
+--
+--
+--  2. Induction Hypothesis (2. I.H.):
+--  ----------------------------------
+--
+--    For an arbitrary, but fixed list "xs" and for all lists "ys"
+--    and for all lists "zs", the statement ...
+--
+--      shunt ys ( shunt xs zs ) = shunt ( xs ++ ys ) zs
+--
+--    ... holds.
+--
+--
+--  2. Induction Step (2. I.S.):
+--  ----------------------------
+--
+--
+--     (left) := shunt ys ( shunt ( x : xs ) zs )
+--                                                  | shunt
+--             = shunt ys ( shunt xs ( x : zs ) )
+--                                                  | (2. I.H.)
+--             = shunt ( xs ++ ys ) ( x : zs )
+--
+--
+--    (right) := shunt ( ( x : xs ) ++ ys ) zs
+--                                               | ++
+--             = shunt ( x : ( xs ++ ys ) ) zs
+--                                               | shunt
+--             = shunt ( xs ++ ys ) ( x : zs )
+--
+--
+--    =>  (left) = (right)
+--
+--
+--    ■  (2. Proposition)
+--
+--
+--
+-- Test, choosing "zs" for ...
+--
+--
+--   (1.) shunt ys ( shunt xs [] ) = shunt ys ( shunt xs zs )
+--
+--   ... and ...
+--
+--   (2.) shunt ( xs ++ ys ) [] = shunt ( xs ++ ys ) zs
+--
+--   ... to hold:
+--
+--
+--  (1.)
+--
+--    shunt ys ( shunt xs zs )
+--                               | zs := []
+--    = shunt ys ( shunt xs [] )
+--
+--  (2.)
+--
+--    shunt ( xs ++ ys ) zs
+--                               | zs = []
+--    = shunt ( xs ++ ys ) []
+--
+--  ✔
+
+
+
+

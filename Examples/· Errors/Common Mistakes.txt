@@ -1,0 +1,7 @@
+* Missing condition for recursion termination.
+
+* Missing conditions for special cases which leads to non termination.
+
+* Applying an Integer type as an argument where an Int type is expected.
+
+* Renaming issues if there were several similar names in several scopes.
