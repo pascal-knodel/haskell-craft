@@ -1,0 +1,187 @@
+--
+--
+--
+----------------
+-- Exercise 9.9.
+----------------
+--
+--
+--
+module E'9''9 where
+
+
+
+-- Notes:
+--
+--  - Use/See templates for structural induction.
+--  - Note: Re/-member/-think/-view the definitions of "zip", "unzip", "fst" and "snd".
+
+
+
+
+-- ------------
+-- Proposition:
+-- ------------
+--
+--   zip ( fst ( unzip pairs ) ) ( snd ( unzip pairs ) ) = pairs
+--
+--
+-- Proof By Structural Induction:
+-- ------------------------------
+--
+--
+--   Induction Beginning (I.B.):
+--   ---------------------------
+--
+--
+--     (Base case 1.)  :<=>  pairs := []
+--     
+--       =>  (left) := zip ( fst ( unzip pairs ) ) ( snd ( unzip pairs ) )
+--                                                                           | (Base case 1.)
+--                   = zip ( fst ( unzip [] ) ) ( snd ( unzip [] ) )
+--                                                                           | unzip
+--                   = zip ( fst ( [] , [] ) ) ( snd ( [] , [] ) )
+--                                                                           | fst
+--                   = zip [] ( snd ( [] , [] ) )
+--                                                                           | snd
+--                   = zip [] []
+--                                                                           | zip
+--                   = []
+--
+--
+--          (right) := pairs
+--                          | (Base case 1.)
+--                   = []
+--
+--
+--       => (left) = (right)
+--
+--       ✔
+--
+--
+--  Induction Hypothesis (I.H.):
+--  ----------------------------
+--
+--    For an arbitrary, but fixed list "pairs", the statement ...
+--
+--      zip ( fst ( unzip pairs ) ) ( snd ( unzip pairs ) ) = pairs
+--
+--    ... holds.
+--
+--
+--  Induction Step (I.S.):
+--  ----------------------
+--
+--
+--     (left) := zip ( fst ( unzip ( pair : pairs ) ) ) ( snd ( unzip ( pair : pairs ) ) )
+--                                                                                           | zip
+--             = pair : zip ( fst ( unzip pairs ) ) ( snd ( unzip pairs ) )
+--                                                                                           | (I.H.)
+--             = pair : pairs
+--
+--
+--    (right) := pair : pairs
+--
+--
+--    =>  (left) = (right)
+--
+--    ■
+
+
+-- Note: More detailed induction:
+--
+--     (left) := zip ( fst ( unzip ( pair : pairs ) ) ) ( snd ( unzip ( pair : pairs ) ) )
+--
+--             = zip ( fst ( unzip ( ( firstComponent , secondComponent ) : pairs ) )
+--                   ( snd ( unzip ( ( firstComponent , secondComponent ) : pairs ) )
+--
+--             = zip ( fst ( firstComponent : remainingFirstComponents , secondComponent : remainingSecondComponents ) )
+--                   ( snd ( firstComponent : remainingFirstComponents , secondComponent : remainingSecondComponents ) )
+--
+--             = zip ( firstComponent : remainingFirstComponents ) ( secondComponent : remainingSecondComponents )
+--                                                                                                                         | zip
+--             = ( firstComponent , secondComponent ) : zip remainingFirstComponents remainingSecondComponents
+--
+--             = pair : zip ( fst ( unzip pairs ) ) ( snd ( unzip pairs ) )
+--                                                                                                                         | (I.H.)
+--             = pair : pairs
+
+
+
+-- ------------
+-- Proposition:
+-- ------------
+--
+--   Assumption: length leftList = length rightList
+--
+--   => unzip ( zip leftList rightList ) = ( leftList , rightList )
+--
+--
+-- Proof By Structural Induction:
+-- ------------------------------
+--
+--
+--   Induction Beginning (I.B.):
+--   ---------------------------
+--
+--
+--     (Base case 1.)  :<=>  leftList := []
+--                                            | (Assumption.)
+--                     :=> rightList = []
+--     
+--       =>  (left) := unzip ( zip leftList rightList )
+--                                                       | (Base case 1.)
+--                   = unzip ( zip [] [] )
+--                                                       | zip
+--                   = unzip ( [] )
+--                                                       | unzip
+--                   = ( [] , [] )
+--
+--
+--          (right) := ( leftList , rightList )
+--                                                 | (Base case 1.)
+--                   = ( [] , [] )
+--
+--
+--       => (left) = (right)
+--
+--       ✔
+--
+--
+--  Induction Hypothesis (I.H.):
+--  ----------------------------
+--
+--    For an arbitrary, but fixed list-length (a natural number), the statement ...
+--
+--      unzip ( zip leftList rightList ) = ( leftList , rightList )
+--
+--    ... holds.
+--
+--
+--  Induction Step (I.S.):
+--  ----------------------
+--
+--
+--     (left) := unzip ( zip ( leftItem : remainingLeftItems ) ( rightItem : remainingRightItems ) )
+--                                                                                                                              | zip
+--                                                                                                                              | (List length(s) are at least 1.)
+--                                                                                                                              | (Assumption.)
+--             = unzip ( ( leftItem , rightItem ) : zip remainingLeftItems remainingRightItems )
+--                                                                                                                              | unzip
+--             = ( leftItem : remainingLeftItems' , rightItem : remainingRightItems' )
+--               where ( remainingLeftItems' , remainingRightItems' ) := unzip ( zip remainingLeftItems remainingRightItems )
+--                                                                                                                              | (I.H.)
+--                                                                                                                              | (Assumption.)
+--             = ( leftItem : remainingLeftItems , rightItem : remainingRightItems )
+--
+--
+--    (right) := ( leftItem : remainingLeftItems , rightItem : remainingRightItems )
+--
+--
+--    =>  (left) = (right)
+--
+--    ■
+
+
+
+
