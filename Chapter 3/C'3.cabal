@@ -1,0 +1,13 @@
+name:                Craft3ePascalChapter3
+version:             0.1.0.0
+        
+author:              Pascal Knodel
+maintainer:          pascal.knodel@mail.com
+        
+build-type:          Simple
+cabal-version:       >=1.10
+
+library
+  exposed-modules:     E'3'27, E'3'26, E'3'25, E'3'24, E'3'23, E'3'22, E'3'21, E'3'20, E'3'19, E'3'18, E'3'17, E'3'16, E'3'15, E'3'14, E'3'13, E'3'12, E'3'11, E'3'10, E'3''9, E'3''8, E'3''7, E'3''6, E'3''5, E'3''4, E'3''3, E'3''2, E'3''1, C'3, B'C'3
+  build-depends:       base >=4.7 && <4.8, QuickCheck >=2.6 && <2.7    
+  default-language:    Haskell2010
