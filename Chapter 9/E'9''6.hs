@@ -1,0 +1,156 @@
+--
+--
+--
+----------------
+-- Exercise 9.6.
+----------------
+--
+--
+--
+module E'9''6 where
+
+
+
+-- Notes:
+--
+--  - Use/See templates for structural induction.
+--  - Re/-member/-think/-view the definition of "++".
+
+
+
+
+-- ------------
+-- Proposition:
+-- ------------
+--
+--   leftList ++ [] = leftList
+--
+--
+-- Proof By Structural Induction:
+-- ------------------------------
+--
+--
+--   Induction Beginning (I.B.):
+--   ---------------------------
+--
+--     (Base case 1.)  :<=>  leftList := []
+--     
+--
+--       =>  (left) := leftList ++ []
+--                                      | (Base case 1.)
+--                   = [] ++ []
+--                                      | sum; (Neutral element of ++.)
+--                   = []
+--
+--
+--          (right) := leftList
+--                                      | (Base case 1.)
+--                   = []
+--
+--
+--       => (left) = (right)
+--
+--       ✔
+--
+--
+--  Induction Hypothesis (I.H.):
+--  ----------------------------
+--
+--    For an arbitrary, but fixed list "leftList", the statement ...
+--
+--      leftList ++ [] = leftList
+--
+--    ... holds.
+--
+--
+--  Induction Step (I.S.):
+--  ----------------------
+--
+-- 
+--     (left) := ( leftItem : remainingLeftItems ) ++ []
+--                                                         | ++
+--             = leftItem : ( remainingLeftItems ++ [] )
+--                                                         | (I.H.)
+--             = leftItem : remainingLeftItems
+--
+--
+--    (right) := leftItem : remainingLeftItems
+--
+--
+--    =>  (left) = (right)
+--
+--    ■
+
+
+
+-- ------------
+-- Proposition:
+-- ------------
+--
+--   leftList ++ ( middleList ++ rightList ) == ( leftList ++ middleList ) ++ rightList
+--
+--
+-- Proof By Structural Induction:
+-- ------------------------------
+--
+--
+--   Induction Beginning (I.B.):
+--   ---------------------------
+--
+--
+--     (Base case 1.)  :<=>  leftList := []
+--     
+--       =>  (left) := leftList ++ ( middleList ++ rightList )
+--                                                               | (Base case 1.)
+--                   = [] ++ ( middleList ++ rightList )
+--                                                               | sum; (Neutral element of ++.)
+--                   = middleList ++ rightList
+--
+--
+--          (right) := ( leftList ++ middleList ) ++ rightList
+--                                                               | (Base case 1.)
+--                   = ( [] ++ middleList ) ++ rightList
+--                                                               | sum; (Neutral element of ++.)
+--                   = middleList ++ rightList
+--
+--
+--       => (left) = (right)
+--
+--       ✔
+--
+--
+--  Induction Hypothesis (I.H.):
+--  ----------------------------
+--
+--    For an arbitrary, but fixed list "leftList", the statement ...
+--
+--      leftList ++ ( middleList ++ rightList ) == ( leftList ++ middleList ) ++ rightList
+--
+--    ... holds.
+--
+--
+--  Induction Step (I.S.):
+--  ----------------------
+--
+--
+--     (left) := ( leftItem : remainingLeftItems ) ++ ( middleList ++ rightList )
+--                                                                                  | ++
+--             = leftItem : ( remainingLeftItems ++ ( middleList ++ rightList ) )
+--                                                                                  | (I.H.)
+--             = leftItem : ( ( remainingLeftItems ++ middleList ) ++ rightList )
+--
+--
+--    (right) := ( ( leftItem : remainingLeftItems ) ++ middleList ) ++ rightList
+--                                                                                  | ++
+--             = ( leftItem : ( remainingLeftItems ++ middleList ) ) ++ rightList
+--                                                                                  | ++
+--             = leftItem : ( ( remainingLeftItems ++ middleList ) ++ rightList )
+--
+--
+--    =>  (left) = (right)
+--
+--    ■
+
+
+
+
