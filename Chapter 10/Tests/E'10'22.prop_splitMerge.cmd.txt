@@ -1,0 +1,2 @@
+:l E'10'22
+verboseCheck prop_splitMerge
